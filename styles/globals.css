@@ -1,0 +1,68 @@
+@import "tailwindcss";
+
+@theme {
+  --font-inter: var(--font-inter), sans-serif;
+  --font-jetbrains-mono: var(--font-jetbrains-mono), monospace;
+
+  --color-primary-0: #ffffff;
+  --color-primary-100: #f1f1f1;
+  --color-primary-200: #e2e2e2;
+  --color-primary-300: #ababab;
+  --color-primary-400: #777777;
+  --color-primary-500: #474747;
+  --color-primary-600: #303030;
+  --color-primary-700: #1b1b1b;
+  --color-primary-800: #000000;
+
+  --color-neutral-0: #ffffff;
+  --color-neutral-100: #eaf1fe;
+  --color-neutral-200: #dce3f0;
+  --color-neutral-300: #a5acb8;
+  --color-neutral-400: #707883;
+  --color-neutral-500: #404752;
+  --color-neutral-600: #2a313b;
+  --color-neutral-700: #151c25;
+  --color-neutral-800: #000000;
+}
+
+@layer base {
+  button {
+    @apply cursor-pointer;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.headline-lg {
+  @apply text-5xl font-bold;
+}
+
+.headline-lg-mobile {
+  @apply text-3xl font-bold;
+}
+
+.headline-md {
+  @apply text-2xl font-bold;
+}
+
+.body-lg {
+  @apply text-lg font-normal;
+}
+
+.body-md {
+  @apply text-base font-normal;
+}
+
+.label-caps {
+  @apply text-sm font-semibold;
+}
+
+.task-item {
+  @apply text-sm font-normal;
+}
+
+.task-completed {
+  @apply text-sm font-normal;
+}
