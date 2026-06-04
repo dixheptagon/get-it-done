@@ -15,6 +15,7 @@ import {
   CaretRightIcon,
   CaretDownIcon,
 } from "@phosphor-icons/react";
+import { format } from "date-fns";
 
 function Calendar({
   className,
@@ -209,7 +210,7 @@ function CalendarDayButton({
       ref={ref}
       variant="ghost"
       size="icon"
-      data-day={day.date.toLocaleDateString(locale?.code)}
+      data-day={format(day.date, "yyyy-MM-dd")}
       data-selected-single={
         modifiers.selected &&
         !modifiers.range_start &&

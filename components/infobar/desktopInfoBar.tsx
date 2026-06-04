@@ -6,7 +6,6 @@ import { MdOutlineSettings, MdOutlineToday } from "react-icons/md";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import clsx from "clsx";
-import { Calendar } from "../ui/calendar";
 import { useState } from "react";
 import { WeeklyCalendarDesktop } from "./weeklyCalendar";
 
@@ -17,8 +16,6 @@ const SIDEBAR_OPTIONS = [
 
 export function DesktopInfobar() {
   const pathname = usePathname();
-
-  const [date, setDate] = useState<Date | undefined>(new Date());
 
   return (
     <main className="bg-primary-0 -mx-4 -my-2 min-h-screen px-12 py-10">

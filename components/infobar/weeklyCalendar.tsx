@@ -16,14 +16,16 @@ function WeeklyCalendarMobile() {
       <CarouselContent className="flex items-center justify-between gap-3">
         {weeklyDates.map((day: DayItem) => {
           const isActive = day.fullDate === selectedDate;
-          const isPast = new Date(day.fullDate) < new Date();
+
+          const today = new Date().toISOString().split("T")[0];
+          const isPast = day.fullDate < today;
 
           return (
             <button
               key={day.fullDate}
               onClick={() => setSelectedDate(day.fullDate)}
               className={clsx(
-                "text-primar-800 transition-color flex min-w-13 flex-1 flex-col items-center justify-center rounded-md px-3 py-2 duration-300 focus:outline-none",
+                "text-primar-800 transition-color flex min-w-13 flex-1 flex-col items-center justify-center rounded-md px-3 py-2 duration-100 focus:outline-none",
                 isActive
                   ? "bg-primary-800 text-primary-0 font-bold shadow-md"
                   : "hover:text-primary-800/80 bg-transparent",
