@@ -4,8 +4,10 @@ import { DayItem, getWeeklyDates } from "@/lib/date";
 import { setSelectedDate, useTodoStore } from "@/store/useTodoStore";
 import clsx from "clsx";
 import { Carousel, CarouselContent } from "../ui/carousel";
+import { Calendar } from "../ui/calendar";
+import { formatDateToString } from "@/lib/dateFormatter";
 
-export function WeeklyCalendar() {
+function WeeklyCalendarMobile() {
   const selectedDate = useTodoStore((state) => state.selectedDate);
   const weeklyDates = getWeeklyDates();
 
@@ -46,3 +48,23 @@ export function WeeklyCalendar() {
     </Carousel>
   );
 }
+
+function WeeklyCalendarDesktop() {
+  const selectedDate = useTodoStore((state) => state.selectedDate);
+
+  return (
+    <>
+      <Calendar
+        mode="single"
+        selected={new Date(selectedDate)}
+        onSelect={(date) => {
+          console.log("Date:", date);
+          if (date) setSelectedDate(formatDateToString(date));
+        }}
+        className=""
+      />
+    </>
+  );
+}
+
+export { WeeklyCalendarMobile, WeeklyCalendarDesktop };

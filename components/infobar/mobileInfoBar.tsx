@@ -1,17 +1,17 @@
 import { MdOutlineSettings } from "react-icons/md";
 import { ProgressBar } from "./progressBar";
-import { WeeklyCalendar } from "./weeklyCalendar";
+import { WeeklyCalendarMobile } from "./weeklyCalendar";
 
 export function MobileInfobar() {
   return (
     <main>
-      <div className="flex items-center justify-between ">
+      <div className="flex items-center justify-between">
         <h1 className="text-xl font-bold">Get It Done</h1>
-        <MdOutlineSettings className="w-6 h-6 text-black" />
+        <MdOutlineSettings className="h-6 w-6 text-black" />
       </div>
-      <hr className="-mx-4 my-2 text-primary-300" />
+      <hr className="text-primary-300 -mx-4 my-2" />
 
-      <div className="flex justify-between items-baseline">
+      <div className="flex items-baseline justify-between">
         <h1 className="text-3xl font-bold">Workspace</h1>
         <h5 className="font-jetbrains-mono text-xs">65% DONE</h5>
       </div>
@@ -21,7 +21,7 @@ export function MobileInfobar() {
       </div>
 
       <div className="py-2">
-        <WeeklyCalendar />
+        <WeeklyCalendarMobile />
       </div>
     </main>
   );
