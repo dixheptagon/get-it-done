@@ -63,7 +63,7 @@ function WeeklyCalendarDesktop() {
           console.log("Date:", date);
           if (date) setSelectedDate(formatDateToString(date));
         }}
-        className=""
+        captionLayout="dropdown"
       />
     </>
   );

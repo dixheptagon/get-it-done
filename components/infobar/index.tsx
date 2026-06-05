@@ -3,7 +3,7 @@ import { MobileInfobar } from "./mobileInfoBar";
 
 export function Infobar() {
   return (
-    <main className="md:max-w-[45vh]">
+    <main className="md:min-w-[48vh]">
       <div className="hidden w-full md:block">
         <DesktopInfobar />
       </div>
