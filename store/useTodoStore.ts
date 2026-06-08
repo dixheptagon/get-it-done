@@ -1,20 +1,10 @@
+import { TodoFormValues } from "@/types/todoSchema";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
 type TodoStore = {
   selectedDate: string;
-  todos: Todo[];
-};
-
-type Todo = {
-  id: string;
-  title: string;
-  description: string;
-  date: string;
-  startTime: string;
-  endTime: string;
-  attachmentLink: string;
-  isImportant: boolean;
+  todos: TodoFormValues[];
 };
 
 const useTodoStore = create<TodoStore>()(
@@ -35,11 +25,11 @@ const setSelectedDate = (date: string) => {
   useTodoStore.setState({ selectedDate: date });
 };
 
-const addTodo = (todo: Todo) => {
+const addTodo = (todo: TodoFormValues) => {
   useTodoStore.setState((state) => ({
     todos: [...state.todos, todo],
   }));
 };
 
 export { useTodoStore, setSelectedDate, addTodo };
-export type { TodoStore, Todo };
+export type { TodoStore };

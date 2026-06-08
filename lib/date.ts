@@ -45,6 +45,10 @@ const getPresentTime = (isEndTime: boolean = false) => {
 
   if (isEndTime) {
     const hours = String(now.getHours() + 1).padStart(2, "0");
+    if (hours === "23") {
+      return "23:59";
+    }
+
     return `${hours}:00`;
   }
 

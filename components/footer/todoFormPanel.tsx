@@ -1,13 +1,15 @@
 "use client";
 
 import { getPresentTime, getTodayDate } from "@/lib/date";
-import { useForm, useWatch } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type TodoFormValues, todoSchema } from "@/types/todoSchema";
 import clsx from "clsx";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { IoIosClose } from "react-icons/io";
 import { IoLink } from "react-icons/io5";
+import { addTodo } from "@/store/useTodoStore";
+import { useCallback, useState } from "react";
 
 function MobileTodoFormPanel({
   isTodoFormPanelOpen,
@@ -16,12 +18,13 @@ function MobileTodoFormPanel({
   isTodoFormPanelOpen: boolean;
   setIsTodoFormPanelOpen: (isTodoFormPanelOpen: boolean) => void;
 }) {
+  const [isImportant, setIsImportant] = useState(false);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
     setValue,
-    control,
     reset,
   } = useForm<TodoFormValues>({
     resolver: zodResolver(todoSchema),
@@ -31,24 +34,24 @@ function MobileTodoFormPanel({
       date: getTodayDate(),
       startTime: getPresentTime(),
       endTime: getPresentTime(true),
-      attachmentLink: "",
       isImportant: false,
     },
   });
 
-  const isImportant = useWatch({
-    control,
-    name: "isImportant",
-  });
+  const onSubmit = useCallback(
+    (data: TodoFormValues) => {
+      const todo = {
+        id: crypto.randomUUID(),
+        ...data,
+      };
 
-  const onSubmit = (data: TodoFormValues) => {
-    const todo = {
-      id: crypto.randomUUID(),
-      ...data,
-    };
+      addTodo(todo);
 
-    console.log("Data", todo);
-  };
+      reset();
+      setIsTodoFormPanelOpen(false);
+    },
+    [reset],
+  );
 
   return (
     <div
@@ -99,7 +102,7 @@ function MobileTodoFormPanel({
         <div className="text-primary-400">
           <div className="flex items-center justify-between">
             <label
-              htmlFor="title"
+              htmlFor="description"
               className="font-jetbrains-mono text-sm uppercase"
             >
               Description
@@ -171,7 +174,10 @@ function MobileTodoFormPanel({
 
           <button
             type="button"
-            onClick={() => setValue("isImportant", !isImportant)}
+            onClick={() => {
+              setIsImportant((v) => !v);
+              setValue("isImportant", !isImportant);
+            }}
             className={clsx(
               "relative h-8 w-16 rounded-full transition-colors duration-300",
               isImportant ? "bg-primary-800" : "bg-primary-300",
@@ -201,7 +207,7 @@ function MobileTodoFormPanel({
               type="text"
               placeholder="Add attachment link..."
               className={clsx(
-                "ring-primary-200 text-primary-800 focus:ring-primary-500 mt-1 w-full rounded-xs p-2 ring-1 transition-all outline-none",
+                "ring-primary-200 text-primary-800 focus:ring-primary-500 mt-1 w-full rounded-xs p-2 text-sm ring-1 transition-all outline-none",
                 errors.attachmentLink && "ring ring-red-500!",
               )}
             />
