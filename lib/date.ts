@@ -30,5 +30,26 @@ const getWeeklyDates = (): DayItem[] => {
   return days;
 };
 
-export { getWeeklyDates };
+const getTodayDate = () => {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const day = String(today.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+};
+
+const getPresentTime = (isEndTime: boolean = false) => {
+  const now = new Date();
+  const hours = String(now.getHours()).padStart(2, "0");
+
+  if (isEndTime) {
+    const hours = String(now.getHours() + 1).padStart(2, "0");
+    return `${hours}:00`;
+  }
+
+  return `${hours}:00`;
+};
+
+export { getWeeklyDates, getTodayDate, getPresentTime };
 export type { DayItem };

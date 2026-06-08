@@ -1,7 +1,10 @@
 "use client";
 
+import { getPresentTime, getTodayDate } from "@/lib/date";
+import { useForm, useWatch } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { type TodoFormValues, todoSchema } from "@/types/todoSchema";
 import clsx from "clsx";
-import { useState } from "react";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { IoIosClose } from "react-icons/io";
 import { IoLink } from "react-icons/io5";
@@ -13,7 +16,39 @@ function MobileTodoFormPanel({
   isTodoFormPanelOpen: boolean;
   setIsTodoFormPanelOpen: (isTodoFormPanelOpen: boolean) => void;
 }) {
-  const [isImportant, setIsImportant] = useState<boolean>(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    control,
+    reset,
+  } = useForm<TodoFormValues>({
+    resolver: zodResolver(todoSchema),
+    defaultValues: {
+      title: "",
+      description: "",
+      date: getTodayDate(),
+      startTime: getPresentTime(),
+      endTime: getPresentTime(true),
+      attachmentLink: "",
+      isImportant: false,
+    },
+  });
+
+  const isImportant = useWatch({
+    control,
+    name: "isImportant",
+  });
+
+  const onSubmit = (data: TodoFormValues) => {
+    const todo = {
+      id: crypto.randomUUID(),
+      ...data,
+    };
+
+    console.log("Data", todo);
+  };
 
   return (
     <div
@@ -34,57 +69,92 @@ function MobileTodoFormPanel({
         </button>
       </div>
 
-      <form action="" className="space-y-3">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
         <div className="text-primary-400">
-          <label htmlFor="title" className="font-jetbrains-mono uppercase">
-            Title
-          </label>
+          <div className="flex items-center justify-between">
+            <label
+              htmlFor="title"
+              className="font-jetbrains-mono text-sm uppercase"
+            >
+              Title
+            </label>
+            {errors.title && (
+              <span className="text-sm text-red-500">
+                *{errors.title.message}
+              </span>
+            )}
+          </div>
           <input
+            {...register("title")}
             type="text"
             id="title"
             placeholder="What needs to be done?"
-            className="ring-primary-200 focus:ring-primary-500 mt-1 w-full rounded-[2px] p-2 ring-1 transition-all outline-none"
+            className={clsx(
+              "ring-primary-200 focus:ring-primary-500 text-primary-800 mt-1 w-full rounded-xs p-2 ring-1 transition-all outline-none",
+              errors.title && "ring ring-red-500!",
+            )}
           />
         </div>
 
         <div className="text-primary-400">
-          <label htmlFor="title" className="font-jetbrains-mono uppercase">
-            Description
-          </label>
+          <div className="flex items-center justify-between">
+            <label
+              htmlFor="title"
+              className="font-jetbrains-mono text-sm uppercase"
+            >
+              Description
+            </label>
+            {errors.description && (
+              <span className="text-sm text-red-500">
+                *{errors.description.message}
+              </span>
+            )}
+          </div>
           <textarea
-            name="description"
-            id=""
-            className="ring-primary-200 focus:ring-primary-500 mt-1 w-full rounded-[2px] p-2 ring-1 transition-all outline-none"
+            {...register("description")}
+            className={clsx(
+              "ring-primary-200 focus:ring-primary-500 text-primary-800 mt-1 w-full rounded-xs p-2 ring-1 transition-all outline-none",
+              errors.description && "ring ring-red-500!",
+            )}
             placeholder="Add context or notes..."
           ></textarea>
         </div>
 
         <div className="text-primary-400 grid grid-cols-2 gap-2">
-          <h1 className="font-jetbrains-mono uppercase">Date</h1>
-          <h1 className="font-jetbrains-mono uppercase">Time</h1>
+          <h1 className="font-jetbrains-mono text-sm uppercase">Date</h1>
+          <h1 className="font-jetbrains-mono text-sm uppercase">Time</h1>
 
           <div>
             <input
-              name="date"
+              {...register("date")}
               type="date"
-              className="ring-primary-200 focus:ring-primary-500 [&::-webkit-calendar-picker-indicator]:text-primary-500 w-full rounded-[2px] px-2 py-2 ring-1 transition-all outline-none"
+              className={clsx(
+                "ring-primary-200 focus:ring-primary-500 text-primary-800 [&::-webkit-calendar-picker-indicator]:text-primary-500 w-full rounded-xs px-2 py-2 ring-1 transition-all outline-none",
+                errors.date && "ring ring-red-500!",
+              )}
               placeholder="Select a date..."
             />
           </div>
 
-          <div className="ring-primary-200 focus-within:ring-primary-500 flex items-center gap-2 rounded-[2px] px-2 ring-1 transition-all">
+          <div className="ring-primary-200 focus-within:ring-primary-500 flex items-center gap-2 rounded-xs px-2 ring-1 transition-all">
             <input
+              {...register("startTime")}
               type="time"
-              name="startTime"
-              className="flex w-full justify-center border-none bg-transparent outline-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+              className={clsx(
+                "text-primary-800 flex w-full justify-center border-none bg-transparent outline-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none",
+                errors.startTime && "ring ring-red-500!",
+              )}
             />
 
             <FaArrowRightLong className="text-primary-400 h-8 w-8" />
 
             <input
+              {...register("endTime")}
               type="time"
-              name="endTime"
-              className="flex w-full justify-center border-none bg-transparent outline-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+              className={clsx(
+                "text-primary-800 flex w-full justify-center border-none bg-transparent outline-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none",
+                errors.endTime && "ring ring-red-500!",
+              )}
             />
           </div>
         </div>
@@ -94,14 +164,14 @@ function MobileTodoFormPanel({
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-xl font-semibold">Mark as Urgent</h1>
-            <h2 className="font-jetbrains-mono text-primary-400 text-xs">
+            <h2 className="font-jetbrains-mono text-primary-400 text-xs uppercase">
               Priority Task
             </h2>
           </div>
 
           <button
             type="button"
-            onClick={() => setIsImportant(!isImportant)}
+            onClick={() => setValue("isImportant", !isImportant)}
             className={clsx(
               "relative h-8 w-16 rounded-full transition-colors duration-300",
               isImportant ? "bg-primary-800" : "bg-primary-300",
@@ -123,24 +193,33 @@ function MobileTodoFormPanel({
             Attachment Link
           </h1>
 
-          <div className="border-primary-200 flex items-center gap-2 rounded-[2px] border p-3">
+          <div className="border-primary-200 flex items-center gap-2 rounded-xs border p-3">
             <IoLink className="text-primary-800 h-6 w-6" />
             <input
-              type="text"
+              {...register("attachmentLink")}
               id="attachmentLink"
+              type="text"
               placeholder="Add attachment link..."
-              className="ring-primary-200 focus:ring-primary-500 mt-1 w-full rounded-[2px] p-2 ring-1 transition-all outline-none"
+              className={clsx(
+                "ring-primary-200 text-primary-800 focus:ring-primary-500 mt-1 w-full rounded-xs p-2 ring-1 transition-all outline-none",
+                errors.attachmentLink && "ring ring-red-500!",
+              )}
             />
           </div>
+          {errors.attachmentLink && (
+            <span className="text-xs text-red-500">
+              {errors.attachmentLink.message}
+            </span>
+          )}
         </div>
-      </form>
 
-      <button
-        type="submit"
-        className="bg-primary-800 text-primary-0 font-jetbrains-mono mt-8 w-full rounded-[2px] p-3 text-center text-lg uppercase"
-      >
-        Create Task
-      </button>
+        <button
+          type="submit"
+          className="bg-primary-800 text-primary-0 font-jetbrains-mono mt-8 w-full rounded-xs p-3 text-center text-lg uppercase"
+        >
+          Create Task
+        </button>
+      </form>
     </div>
   );
 }
