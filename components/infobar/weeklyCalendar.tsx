@@ -3,16 +3,29 @@
 import { DayItem, getWeeklyDates } from "@/lib/date";
 import { setSelectedDate, useTodoStore } from "@/store/useTodoStore";
 import clsx from "clsx";
-import { Carousel, CarouselContent } from "../ui/carousel";
+import { Carousel, CarouselApi, CarouselContent } from "../ui/carousel";
 import { Calendar } from "../ui/calendar";
 import { formatDateToString } from "@/lib/dateFormatter";
+import { useEffect, useMemo, useState } from "react";
 
 function WeeklyCalendarMobile() {
   const selectedDate = useTodoStore((state) => state.selectedDate);
-  const weeklyDates = getWeeklyDates();
+  const weeklyDates = useMemo(() => getWeeklyDates(), []);
+
+  const [api, setApi] = useState<CarouselApi>();
+
+  useEffect(() => {
+    if (!api) return;
+
+    const selectedIndex = weeklyDates.findIndex(
+      (day) => day.fullDate === selectedDate,
+    );
+
+    api.scrollTo(selectedIndex);
+  }, [api, selectedDate]);
 
   return (
-    <Carousel>
+    <Carousel setApi={setApi}>
       <CarouselContent className="flex items-center justify-between gap-3">
         {weeklyDates.map((day: DayItem) => {
           const isActive = day.fullDate === selectedDate;

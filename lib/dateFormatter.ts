@@ -18,4 +18,11 @@ const formatDateToString = (date: Date) => {
   return `${year}-${month}-${day}`;
 };
 
-export { formattedDate, formatDateToString };
+const formatDateMonth = (date: Date) => {
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${month} ${day}`;
+};
+
+export { formattedDate, formatDateToString, formatDateMonth };

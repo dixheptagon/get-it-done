@@ -17,6 +17,21 @@ import {
 } from "@phosphor-icons/react";
 import { format } from "date-fns";
 
+const MONTHS = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
 function Calendar({
   className,
   classNames,
@@ -45,8 +60,7 @@ function Calendar({
       captionLayout={captionLayout}
       locale={locale}
       formatters={{
-        formatMonthDropdown: (date) =>
-          date.toLocaleString(locale?.code, { month: "short" }),
+        formatMonthDropdown: (date) => MONTHS[date.getMonth()],
         ...formatters,
 
         formatWeekdayName: (day, options) => {
@@ -81,7 +95,7 @@ function Calendar({
           defaultClassNames.month_caption,
         ),
         dropdowns: cn(
-          "flex h-(--cell-size) w-full items-center justify-start gap-1.5 text-sm font-medium",
+          "flex h-(--cell-size) w-full items-center justify-start gap-1.5 text-sm font-medium ",
           defaultClassNames.dropdowns,
         ),
         dropdown_root: cn(

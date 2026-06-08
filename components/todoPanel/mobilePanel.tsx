@@ -2,7 +2,7 @@ import { HOURS_LOG } from "@/constants/hoursLog";
 
 export function MobilePanel() {
   return (
-    <main className="mt-52">
+    <main className="mt-52 mb-12">
       <div className="border-primary-200 divide-primary-200 divide-y-2 border-y-2">
         {HOURS_LOG.map((hour) => (
           <div
