@@ -96,14 +96,18 @@ function Calendar({
         ),
         dropdowns: cn(
           "flex h-(--cell-size) w-full items-center justify-start gap-1.5 text-sm font-medium ",
+
           defaultClassNames.dropdowns,
         ),
         dropdown_root: cn(
           "relative rounded-(--cell-radius) ",
+
           defaultClassNames.dropdown_root,
         ),
         dropdown: cn(
           "absolute inset-0 bg-popover opacity-0 ",
+          "[&::-webkit-scrollbar-thumb]:bg-primary-200 resize-none [&::-webkit-scrollbar]:w-3 [&::-webkit-scrollbar-button]:hidden [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-transparent",
+          "[&::-webkit-select-toggle]:bg-primary-800",
           defaultClassNames.dropdown,
         ),
         caption_label: cn(

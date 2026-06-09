@@ -5,9 +5,9 @@ import { MdOutlineCalendarToday } from "react-icons/md";
 import { FaCalendar } from "react-icons/fa";
 import { IoSettingsOutline, IoSettingsSharp, IoAdd } from "react-icons/io5";
 import Link from "next/link";
-import { MobileTodoFormPanel } from "./todoFormPanel";
 import { useState } from "react";
 import clsx from "clsx";
+import { MobileTodoFormPanel } from "./mobileTodoFormPanel";
 
 const NAVBAR_OPTIONS = [
   {

@@ -25,7 +25,18 @@ const todoSchema = z
   .refine((data) => data.startTime < data.endTime, {
     message: "End time must be after start time",
     path: ["endTime"],
-  });
+  })
+  .refine(
+    (data) => {
+      const inputDateString = new Date(data.date).toISOString().split("T")[0];
+      const todayString = new Date().toISOString().split("T")[0];
 
+      return inputDateString >= todayString;
+    },
+    {
+      message: "Date cannot be in the past",
+      path: ["date"],
+    },
+  );
 export type TodoFormValues = z.infer<typeof todoSchema>;
 export { todoSchema };

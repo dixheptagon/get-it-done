@@ -124,13 +124,36 @@ function MobileTodoFormPanel({
         </div>
 
         <div className="text-primary-400 grid grid-cols-2 gap-2">
-          <h1 className="font-jetbrains-mono text-sm uppercase">Date</h1>
-          <h1 className="font-jetbrains-mono text-sm uppercase">Time</h1>
+          <div className="flex items-center justify-between">
+            <h1 className="font-jetbrains-mono text-sm uppercase">Date</h1>
+
+            {errors.date && (
+              <span className="text-sm text-red-500">
+                *{errors.date.message}
+              </span>
+            )}
+          </div>
+          <div className="flex items-center justify-between">
+            <h1 className="font-jetbrains-mono text-sm uppercase">Time</h1>
+
+            {errors.startTime && (
+              <span className="text-sm text-red-500">
+                *{errors.startTime.message}
+              </span>
+            )}
+
+            {errors.endTime && (
+              <span className="text-sm text-red-500">
+                *{errors.endTime.message}
+              </span>
+            )}
+          </div>
 
           <div>
             <input
               {...register("date")}
               type="date"
+              min={new Date().toLocaleDateString("fr-CA")}
               className={clsx(
                 "ring-primary-200 focus:ring-primary-500 text-primary-800 [&::-webkit-calendar-picker-indicator]:text-primary-500 w-full rounded-xs px-2 py-2 ring-1 transition-all outline-none",
                 errors.date && "ring ring-red-500!",
@@ -195,7 +218,7 @@ function MobileTodoFormPanel({
         <div className="border-primary-100 my-2 h-3 border-b-3" />
 
         <div className="space-y-3">
-          <h1 className="font-jetbrains-mono text-primary-400 uppercase">
+          <h1 className="font-jetbrains-mono text-primary-400 text-sm uppercase">
             Attachment Link
           </h1>
 

@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import clsx from "clsx";
 import { WeeklyCalendarDesktop } from "./weeklyCalendar";
+import { setIsTodoFormPanelOpen, useTodoUIStore } from "@/store/useTodoUIStore";
 
 const SIDEBAR_OPTIONS = [
   { name: "Today", icon: MdOutlineToday, path: "/" },
@@ -15,51 +16,72 @@ const SIDEBAR_OPTIONS = [
 
 export function DesktopInfobar() {
   const pathname = usePathname();
+  const isTodoFormPanelOpen = useTodoUIStore(
+    (state) => state.isTodoFormPanelOpen,
+  );
 
   return (
-    <main className="bg-primary-0 fixed top-0 left-0 min-h-screen min-w-[48vh] px-12 py-8">
-      <div>
-        <h1 className="text-2xl font-bold">Get in Done</h1>
-        <span className="text-primary-400 font-semibold">Minimalist Flow</span>
-      </div>
-
-      <button className="bg-primary-800 font-jetbrains-mono group mt-10 flex w-full items-center justify-center gap-3 rounded-md py-4 transition-transform hover:scale-105 hover:shadow-md">
-        <IoMdAdd className="text-primary-0 text-2xl transition-transform duration-300 group-hover:rotate-90" />
-        <span className="text-primary-0 text-sm font-semibold">New Task</span>
-      </button>
-
-      <div className="font-jetbrains-mono mt-8 space-y-3 text-sm font-semibold tracking-wide uppercase">
-        <div className="flex items-center justify-between">
-          <h2 className="text-primary-400">Today&apos;s Progress</h2>
-          <span>65%</span>
+    <>
+      <main className="bg-primary-0 fixed top-0 left-0 min-h-screen min-w-[48vh] px-12 py-8">
+        <div>
+          <h1 className="text-2xl font-bold">Get in Done</h1>
+          <span className="text-primary-400 font-semibold">
+            Minimalist Flow
+          </span>
         </div>
-        <ProgressBar progress={65} />
-      </div>
 
-      <div className="mt-8 space-y-2">
-        {SIDEBAR_OPTIONS.map((option) => {
-          const isActive = pathname === option.path;
+        <button
+          onClick={() => {
+            setIsTodoFormPanelOpen(true);
+          }}
+          className="bg-primary-800 font-jetbrains-mono group mt-10 flex w-full items-center justify-center gap-3 rounded-md py-4 transition-transform hover:scale-105 hover:shadow-md"
+        >
+          <IoMdAdd className="text-primary-0 text-2xl transition-transform duration-300 group-hover:rotate-90" />
+          <span className="text-primary-0 text-sm font-semibold">New Task</span>
+        </button>
 
-          return (
-            <Link
-              href={option.path}
-              key={option.name}
-              className={clsx(
-                "text-primary-400 flex cursor-pointer items-center gap-3 rounded-md px-4 py-4 transition-colors",
-                isActive && "text-primary-800 rounded-md bg-neutral-100",
-                !isActive && "hover:bg-neutral-100/60",
-              )}
-            >
-              <option.icon className="h-6 w-6" />
-              <span className="font-semibold">{option.name}</span>
-            </Link>
-          );
-        })}
-      </div>
+        <div className="font-jetbrains-mono mt-8 space-y-3 text-sm font-semibold tracking-wide uppercase">
+          <div className="flex items-center justify-between">
+            <h2 className="text-primary-400">Today&apos;s Progress</h2>
+            <span>65%</span>
+          </div>
+          <ProgressBar progress={65} />
+        </div>
 
-      <div className="mt-8">
-        <WeeklyCalendarDesktop />
-      </div>
-    </main>
+        <div className="mt-8 space-y-2">
+          {SIDEBAR_OPTIONS.map((option) => {
+            const isActive = pathname === option.path;
+
+            return (
+              <Link
+                href={option.path}
+                key={option.name}
+                className={clsx(
+                  "text-primary-400 flex cursor-pointer items-center gap-3 rounded-md px-4 py-4 transition-colors",
+                  isActive && "text-primary-800 rounded-md bg-neutral-100",
+                  !isActive && "hover:bg-neutral-100/60",
+                )}
+              >
+                <option.icon className="h-6 w-6" />
+                <span className="font-semibold">{option.name}</span>
+              </Link>
+            );
+          })}
+        </div>
+
+        <div className="mt-8">
+          <WeeklyCalendarDesktop />
+        </div>
+      </main>
+
+      <button
+        onClick={() => setIsTodoFormPanelOpen(false)}
+        className={clsx(
+          "bg-primary-800/45 fixed top-0 left-0 z-10 min-h-full w-full opacity-0 backdrop-blur-[1.5px] transition-opacity duration-300",
+          isTodoFormPanelOpen && "opacity-100",
+          !isTodoFormPanelOpen && "pointer-events-none",
+        )}
+      />
+    </>
   );
 }
