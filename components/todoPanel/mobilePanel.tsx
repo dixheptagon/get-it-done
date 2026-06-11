@@ -7,11 +7,16 @@ import { useTodoStore } from "@/store/useTodoStore";
 import clsx from "clsx";
 import { FaRegClock } from "react-icons/fa";
 import { CurrentTimeTracker } from "./currentTimeTracker";
+import { useShallow } from "zustand/react/shallow";
 
 export function MobilePanel() {
-  // TODO: filter todos by date, use get in todoStore
-  const todos = useTodoStore((state) => state.todos);
-  const { activeHour, progress } = useCurrentTime();
+  const todos = useTodoStore(
+    useShallow((state) =>
+      state.todos.filter((todo) => todo.date === state.selectedDate),
+    ),
+  );
+
+  const { activeHour, progress } = useCurrentTime(60000);
   const { hourPanelRef, hourHeightPanel } = useHourPanelHeights([todos]);
 
   return (
@@ -30,7 +35,7 @@ export function MobilePanel() {
               }}
               className={clsx(
                 "font-jetbrains-mono text-primary-500 relative flex min-h-32 gap-4 text-sm",
-                activeHour < hour && "text-primary-800",
+                activeHour <= hour && "text-primary-800",
               )}
             >
               <p>{hour}</p>
@@ -52,7 +57,9 @@ export function MobilePanel() {
                         todo.endTime < formatTime(new Date()) && "opacity-45",
                       )}
                     >
-                      <p className="text-base font-semibold">{todo.title}</p>
+                      <p className="pr-4 text-base font-semibold">
+                        {todo.title}
+                      </p>
 
                       <p className="text-primary-600 line-clamp-3 text-sm">
                         {todo.description}

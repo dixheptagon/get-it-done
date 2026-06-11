@@ -13,7 +13,14 @@ export function MobileInfobar() {
 
       <div className="flex items-baseline justify-between">
         <h1 className="text-3xl font-bold">Workspace</h1>
-        <h5 className="font-jetbrains-mono text-xs">65% DONE</h5>
+        <div className="flex items-center gap-3">
+          <h5 className="font-jetbrains-mono bg-primary-800 text-primary-0 rounded-xs p-1 text-xs">
+            65% DONE
+          </h5>
+          <h5 className="font-jetbrains-mono border-primary-200 text-primary-800 border p-1 text-xs uppercase">
+            8 Task Left
+          </h5>
+        </div>
       </div>
 
       <div className="py-3">

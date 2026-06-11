@@ -1,11 +1,25 @@
 "use client";
 
 import { HOURS_LOG } from "@/constants/hoursLog";
-import { formattedDate } from "@/lib/dateFormatter";
+import { useCurrentTime } from "@/hooks/useCurrentTime";
+import { useHourPanelHeights } from "@/hooks/useHourPanelHeights";
+import { formattedDate, formatTime } from "@/lib/dateFormatter";
 import { useTodoStore } from "@/store/useTodoStore";
+import { CurrentTimeTracker } from "./currentTimeTracker";
+import { useShallow } from "zustand/react/shallow";
+import clsx from "clsx";
+import { FaRegClock } from "react-icons/fa";
 
 export function DesktopPanel() {
   const selectedDate = useTodoStore((state) => state.selectedDate);
+  const todos = useTodoStore(
+    useShallow((state) =>
+      state.todos.filter((todo) => todo.date === state.selectedDate),
+    ),
+  );
+
+  const { activeHour, progress } = useCurrentTime(60000);
+  const { hourPanelRef, hourHeightPanel } = useHourPanelHeights([todos]);
 
   return (
     <div className="px-20 py-6">
@@ -17,15 +31,80 @@ export function DesktopPanel() {
       </div>
 
       <div>
-        {HOURS_LOG.map((hour) => (
-          <div key={hour} className="grid min-h-28 grid-cols-[70px_1fr]">
-            <div className="font-jetbrains-mono text-primary-500 text-sm">
-              {hour}
-            </div>
+        {HOURS_LOG.map((hour) => {
+          const hourTodos = todos.filter((todo) => todo.startTime === hour);
 
-            <div className="border-primary-200 border-t-2"></div>
-          </div>
-        ))}
+          const sectionHeight = hourHeightPanel[hour] || 0;
+
+          return (
+            <div
+              key={hour}
+              ref={(el) => {
+                hourPanelRef.current[hour] = el;
+              }}
+              className="relative grid min-h-28 grid-cols-[70px_1fr]"
+            >
+              <div
+                className={clsx(
+                  "font-jetbrains-mono text-primary-500 text-sm",
+                  activeHour <= hour && "text-primary-800",
+                )}
+              >
+                {hour}
+              </div>
+
+              {hour === activeHour && (
+                <CurrentTimeTracker
+                  sectionHeight={sectionHeight}
+                  progress={progress}
+                />
+              )}
+
+              <div
+                className={clsx(
+                  "border-primary-200 border-t-2",
+                  "grid w-full grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-2",
+                )}
+              >
+                {hourTodos.map((todo) => {
+                  return (
+                    <div
+                      key={todo.id}
+                      className={clsx(
+                        "bg-primary-0 text-primary-800 font-inter flex cursor-pointer flex-col space-y-2 rounded-xs p-2 shadow-md",
+                        todo.endTime < formatTime(new Date()) && "opacity-45",
+                      )}
+                    >
+                      <p className="pr-4 text-base font-semibold">
+                        {todo.title}
+                      </p>
+
+                      <p className="text-primary-600 line-clamp-3 text-sm">
+                        {todo.description}
+                      </p>
+
+                      <div className="mt-auto flex items-center justify-between">
+                        <div className="font-jetbrains-mono flex items-center gap-2 text-xs font-bold">
+                          <FaRegClock className="h-3 w-3" />
+                          <div className="flex gap-1">
+                            <p>{todo.startTime}</p>
+                            <span>-</span>
+                            <p>{todo.endTime}</p>
+                          </div>
+                        </div>
+                        {todo.isImportant && (
+                          <p className="font-jetbrains-mono bg-primary-800 text-primary-0 w-fit p-1 text-xs uppercase">
+                            Urgent
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

@@ -9,6 +9,7 @@ type TodoValues = TodoFormValues & {
 type TodoStore = {
   selectedDate: string;
   todos: TodoValues[];
+  getSelectedDateTodos: () => TodoValues[];
 };
 
 const useTodoStore = create<TodoStore>()(
@@ -17,6 +18,15 @@ const useTodoStore = create<TodoStore>()(
       selectedDate: new Date().toISOString().split("T")[0],
 
       todos: [],
+
+      getSelectedDateTodos: () => {
+        const targetDate = get().selectedDate;
+        return get().todos.filter(
+          (todo) =>
+            todo.startTime.slice(0, 10) === targetDate &&
+            todo.endTime.slice(0, 10) === targetDate,
+        );
+      },
     }),
     {
       name: "todo-store",
