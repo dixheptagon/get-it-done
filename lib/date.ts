@@ -30,6 +30,20 @@ const getWeeklyDates = (): DayItem[] => {
   return days;
 };
 
+const getDisabledBeforeDates = () => {
+  const currentDate = new Date();
+  const dayOfWeek = currentDate.getDay();
+
+  const distanceToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+  const monday = new Date(currentDate);
+  monday.setDate(currentDate.getDate() - distanceToMonday);
+
+  const limitDate = new Date(monday);
+  limitDate.setHours(0, 0, 0, 0);
+
+  return limitDate;
+};
+
 const getTodayDate = () => {
   const today = new Date();
   const year = today.getFullYear();
@@ -55,5 +69,5 @@ const getPresentTime = (isEndTime: boolean = false) => {
   return `${hours}:00`;
 };
 
-export { getWeeklyDates, getTodayDate, getPresentTime };
+export { getWeeklyDates, getTodayDate, getPresentTime, getDisabledBeforeDates };
 export type { DayItem };

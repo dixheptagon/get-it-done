@@ -1,6 +1,11 @@
 "use client";
 
-import { DayItem, getWeeklyDates } from "@/lib/date";
+import {
+  DayItem,
+  getDisabledBeforeDates,
+  getTodayDate,
+  getWeeklyDates,
+} from "@/lib/date";
 import { setSelectedDate, useTodoStore } from "@/store/useTodoStore";
 import clsx from "clsx";
 import { Carousel, CarouselApi, CarouselContent } from "../ui/carousel";
@@ -66,6 +71,7 @@ function WeeklyCalendarMobile() {
 
 function WeeklyCalendarDesktop() {
   const selectedDate = useTodoStore((state) => state.selectedDate);
+  const disabledDateLimit = useMemo(() => getDisabledBeforeDates(), []);
 
   return (
     <>
@@ -77,6 +83,7 @@ function WeeklyCalendarDesktop() {
           if (date) setSelectedDate(formatDateToString(date));
         }}
         captionLayout="dropdown"
+        disabled={{ before: disabledDateLimit }}
       />
     </>
   );
