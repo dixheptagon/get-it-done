@@ -7,6 +7,7 @@
 @theme {
   --font-inter: var(--font-inter), sans-serif;
   --font-jetbrains-mono: var(--font-jetbrains-mono), monospace;
+  --font-hanken-grotesk: var(--font-hanken-grotesk), sans-serif;
 
   --color-primary-0: #ffffff;
   --color-primary-100: #f1f1f1;

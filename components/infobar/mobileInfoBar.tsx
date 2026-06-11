@@ -4,7 +4,7 @@ import { WeeklyCalendarMobile } from "./weeklyCalendar";
 
 export function MobileInfobar() {
   return (
-    <main className="bg-primary-0 fixed inset-0 top-0 min-h-fit px-4 py-2">
+    <main className="bg-primary-0 fixed inset-0 top-0 z-10 min-h-fit px-4 py-2">
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-bold">Get It Done</h1>
         <MdOutlineSettings className="h-6 w-6 text-black" />

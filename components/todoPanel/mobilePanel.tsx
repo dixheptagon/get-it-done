@@ -1,17 +1,85 @@
+"use client";
 import { HOURS_LOG } from "@/constants/hoursLog";
+import { useCurrentTime } from "@/hooks/useCurrentTime";
+import { useHourPanelHeights } from "@/hooks/useHourPanelHeights";
+import { formatTime } from "@/lib/dateFormatter";
+import { useTodoStore } from "@/store/useTodoStore";
+import clsx from "clsx";
+import { FaRegClock } from "react-icons/fa";
+import { CurrentTimeTracker } from "./currentTimeTracker";
 
 export function MobilePanel() {
+  // TODO: filter todos by date, use get in todoStore
+  const todos = useTodoStore((state) => state.todos);
+  const { activeHour, progress } = useCurrentTime();
+  const { hourPanelRef, hourHeightPanel } = useHourPanelHeights([todos]);
+
   return (
     <main className="mt-52 mb-12">
       <div className="border-primary-200 divide-primary-200 divide-y-2 border-y-2">
-        {HOURS_LOG.map((hour) => (
-          <div
-            key={hour}
-            className="font-jetbrains-mono text-primary-500 min-h-32 text-sm"
-          >
-            {hour}
-          </div>
-        ))}
+        {HOURS_LOG.map((hour) => {
+          const hourTodos = todos.filter((todo) => todo.startTime === hour);
+
+          const sectionHeight = hourHeightPanel[hour] || 0;
+
+          return (
+            <div
+              key={hour}
+              ref={(el) => {
+                hourPanelRef.current[hour] = el;
+              }}
+              className={clsx(
+                "font-jetbrains-mono text-primary-500 relative flex min-h-32 gap-4 text-sm",
+                activeHour < hour && "text-primary-800",
+              )}
+            >
+              <p>{hour}</p>
+
+              {hour === activeHour && (
+                <CurrentTimeTracker
+                  sectionHeight={sectionHeight}
+                  progress={progress}
+                />
+              )}
+
+              <div className="grid w-full grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-2">
+                {hourTodos.map((todo) => {
+                  return (
+                    <div
+                      key={todo.id}
+                      className={clsx(
+                        "border-primary-500 text-primary-800 font-inter flex cursor-pointer flex-col space-y-2 rounded-xs border-2 p-2",
+                        todo.endTime < formatTime(new Date()) && "opacity-45",
+                      )}
+                    >
+                      <p className="text-base font-semibold">{todo.title}</p>
+
+                      <p className="text-primary-600 line-clamp-3 text-sm">
+                        {todo.description}
+                      </p>
+
+                      <div className="mt-auto flex items-center justify-between">
+                        <div className="font-jetbrains-mono flex items-center gap-2 text-xs font-bold">
+                          <FaRegClock className="h-3 w-3" />
+                          <div className="flex gap-1">
+                            <p>{todo.startTime}</p>
+                            <span>-</span>
+                            <p>{todo.endTime}</p>
+                          </div>
+                        </div>
+                        {todo.isImportant && (
+                          <p className="font-jetbrains-mono bg-primary-800 text-primary-0 w-fit p-1 text-xs uppercase">
+                            Urgent
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })}
       </div>
     </main>
   );

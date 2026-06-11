@@ -12,6 +12,7 @@ import { FaCheck } from "react-icons/fa";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { IoIosClose } from "react-icons/io";
 import { IoLink } from "react-icons/io5";
+import { MdAddTask } from "react-icons/md";
 
 function DesktopTodoFormPanel() {
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
@@ -261,8 +262,9 @@ function DesktopTodoFormPanel() {
 
           <button
             type="submit"
-            className="bg-primary-800 ring-primary-800 text-primary-0 font-jetbrains-mono mt-4 w-full rounded-xs p-2 text-center text-sm uppercase ring-2"
+            className="bg-primary-800 ring-primary-800 text-primary-0 font-jetbrains-mono hover:bg-primary-600 mt-4 flex w-full items-center justify-center gap-2 rounded-xs p-2.5 text-center text-sm uppercase ring-2 transition-colors"
           >
+            <MdAddTask className="h-5 w-5" />
             Create Task
           </button>
         </div>

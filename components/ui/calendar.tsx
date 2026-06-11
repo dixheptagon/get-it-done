@@ -107,7 +107,6 @@ function Calendar({
         dropdown: cn(
           "absolute inset-0 bg-popover opacity-0 ",
           "[&::-webkit-scrollbar-thumb]:bg-primary-200 resize-none [&::-webkit-scrollbar]:w-3 [&::-webkit-scrollbar-button]:hidden [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-transparent",
-          "[&::-webkit-select-toggle]:bg-primary-800",
           defaultClassNames.dropdown,
         ),
         caption_label: cn(

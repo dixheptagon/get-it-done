@@ -25,4 +25,11 @@ const formatDateMonth = (date: Date) => {
   return `${month} ${day}`;
 };
 
-export { formattedDate, formatDateToString, formatDateMonth };
+const formatTime = (time: Date) => {
+  const hours = String(time.getHours()).padStart(2, "0");
+  const minutes = String(time.getMinutes()).padStart(2, "0");
+
+  return `${hours}:${minutes}`;
+};
+
+export { formattedDate, formatDateToString, formatDateMonth, formatTime };
