@@ -1,3 +1,4 @@
+import { formatDateToString } from "@/lib/dateFormatter";
 import { TodoFormValues } from "@/types/todoSchema";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
@@ -15,7 +16,7 @@ type TodoStore = {
 const useTodoStore = create<TodoStore>()(
   persist(
     (set, get) => ({
-      selectedDate: new Date().toISOString().split("T")[0],
+      selectedDate: formatDateToString(new Date()),
 
       todos: [],
 
@@ -46,4 +47,4 @@ const addTodo = (todo: TodoValues) => {
 };
 
 export { useTodoStore, setSelectedDate, addTodo };
-export type { TodoStore };
+export type { TodoStore, TodoValues };

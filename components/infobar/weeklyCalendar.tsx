@@ -35,7 +35,7 @@ function WeeklyCalendarMobile() {
         {weeklyDates.map((day: DayItem) => {
           const isActive = day.fullDate === selectedDate;
 
-          const today = new Date().toISOString().split("T")[0];
+          const today = formatDateToString(new Date());
           const isPast = day.fullDate < today;
 
           return (

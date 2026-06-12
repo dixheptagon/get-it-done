@@ -2,12 +2,13 @@
 import { HOURS_LOG } from "@/constants/hoursLog";
 import { useCurrentTime } from "@/hooks/useCurrentTime";
 import { useHourPanelHeights } from "@/hooks/useHourPanelHeights";
-import { formatTime } from "@/lib/dateFormatter";
+import { formatDateToString, formatTime } from "@/lib/dateFormatter";
 import { useTodoStore } from "@/store/useTodoStore";
 import clsx from "clsx";
 import { FaRegClock } from "react-icons/fa";
 import { CurrentTimeTracker } from "./currentTimeTracker";
 import { useShallow } from "zustand/react/shallow";
+import { openTodoDetail } from "@/store/useTodoUIStore";
 
 export function MobilePanel() {
   const todos = useTodoStore(
@@ -19,12 +20,18 @@ export function MobilePanel() {
   const { activeHour, progress } = useCurrentTime(60000);
   const { hourPanelRef, hourHeightPanel } = useHourPanelHeights([todos]);
 
+  const selectedDate = useTodoStore((state) => state.selectedDate);
+  const date = new Date();
+  const today = formatDateToString(date);
+  const isToday = selectedDate === today;
+  const isPast = selectedDate < today;
+  const currentTime = formatTime(date);
+
   return (
     <main className="mt-52 mb-12">
       <div className="border-primary-200 divide-primary-200 divide-y-2 border-y-2">
         {HOURS_LOG.map((hour) => {
           const hourTodos = todos.filter((todo) => todo.startTime === hour);
-
           const sectionHeight = hourHeightPanel[hour] || 0;
 
           return (
@@ -40,7 +47,7 @@ export function MobilePanel() {
             >
               <p>{hour}</p>
 
-              {hour === activeHour && (
+              {isToday && hour === activeHour && (
                 <CurrentTimeTracker
                   sectionHeight={sectionHeight}
                   progress={progress}
@@ -49,12 +56,15 @@ export function MobilePanel() {
 
               <div className="grid w-full grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-2">
                 {hourTodos.map((todo) => {
+                  const isTimePast = todo.endTime < currentTime;
+
                   return (
-                    <div
+                    <button
                       key={todo.id}
+                      onClick={() => openTodoDetail(todo)}
                       className={clsx(
-                        "border-primary-500 text-primary-800 font-inter flex cursor-pointer flex-col space-y-2 rounded-xs border-2 p-2",
-                        todo.endTime < formatTime(new Date()) && "opacity-45",
+                        "border-primary-500 text-primary-800 font-inter flex cursor-pointer flex-col space-y-2 rounded-xs border-2 p-2 text-left",
+                        (isTimePast || isPast) && "opacity-45",
                       )}
                     >
                       <p className="pr-4 text-base font-semibold">
@@ -80,7 +90,7 @@ export function MobilePanel() {
                           </p>
                         )}
                       </div>
-                    </div>
+                    </button>
                   );
                 })}
               </div>

@@ -3,7 +3,11 @@
 import { HOURS_LOG } from "@/constants/hoursLog";
 import { useCurrentTime } from "@/hooks/useCurrentTime";
 import { useHourPanelHeights } from "@/hooks/useHourPanelHeights";
-import { formattedDate, formatTime } from "@/lib/dateFormatter";
+import {
+  formatDateToString,
+  formattedDate,
+  formatTime,
+} from "@/lib/dateFormatter";
 import { useTodoStore } from "@/store/useTodoStore";
 import { CurrentTimeTracker } from "./currentTimeTracker";
 import { useShallow } from "zustand/react/shallow";
@@ -11,7 +15,6 @@ import clsx from "clsx";
 import { FaRegClock } from "react-icons/fa";
 
 export function DesktopPanel() {
-  const selectedDate = useTodoStore((state) => state.selectedDate);
   const todos = useTodoStore(
     useShallow((state) =>
       state.todos.filter((todo) => todo.date === state.selectedDate),
@@ -20,6 +23,13 @@ export function DesktopPanel() {
 
   const { activeHour, progress } = useCurrentTime(60000);
   const { hourPanelRef, hourHeightPanel } = useHourPanelHeights([todos]);
+
+  const selectedDate = useTodoStore((state) => state.selectedDate);
+  const date = new Date();
+  const today = formatDateToString(date);
+  const isToday = selectedDate === today;
+  const isPast = selectedDate < today;
+  const currentTime = formatTime(date);
 
   return (
     <div className="px-20 py-6">
@@ -53,7 +63,7 @@ export function DesktopPanel() {
                 {hour}
               </div>
 
-              {hour === activeHour && (
+              {isToday && hour === activeHour && (
                 <CurrentTimeTracker
                   sectionHeight={sectionHeight}
                   progress={progress}
@@ -67,12 +77,14 @@ export function DesktopPanel() {
                 )}
               >
                 {hourTodos.map((todo) => {
+                  const isTimePast = todo.endTime < currentTime;
+
                   return (
                     <div
                       key={todo.id}
                       className={clsx(
                         "bg-primary-0 text-primary-800 font-inter flex cursor-pointer flex-col space-y-2 rounded-xs p-2 shadow-md",
-                        todo.endTime < formatTime(new Date()) && "opacity-45",
+                        (isTimePast || isPast) && "opacity-45",
                       )}
                     >
                       <p className="pr-4 text-base font-semibold">

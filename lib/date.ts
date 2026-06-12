@@ -1,3 +1,5 @@
+import { formatDateToString } from "./dateFormatter";
+
 interface DayItem {
   dayName: string;
   dayNum: number;
@@ -22,7 +24,7 @@ const getWeeklyDates = (): DayItem[] => {
       .toLocaleDateString("en-US", { weekday: "short" })
       .toUpperCase();
     const dayNum = nextDay.getDate();
-    const fullDate = nextDay.toISOString().split("T")[0];
+    const fullDate = formatDateToString(nextDay);
 
     days.push({ dayName, dayNum, fullDate });
   }

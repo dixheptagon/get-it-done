@@ -8,6 +8,7 @@ import Link from "next/link";
 import clsx from "clsx";
 import { WeeklyCalendarDesktop } from "./weeklyCalendar";
 import { setIsTodoFormPanelOpen, useTodoUIStore } from "@/store/useTodoUIStore";
+import { Overlay } from "../ui/overlay";
 
 const SIDEBAR_OPTIONS = [
   { name: "Today", icon: MdOutlineToday, path: "/" },
@@ -74,13 +75,9 @@ export function DesktopInfobar() {
         </div>
       </main>
 
-      <button
-        onClick={() => setIsTodoFormPanelOpen(false)}
-        className={clsx(
-          "bg-primary-800/45 fixed top-0 left-0 z-10 min-h-full w-full opacity-0 backdrop-blur-[1.5px] transition-opacity duration-300",
-          isTodoFormPanelOpen && "opacity-100",
-          !isTodoFormPanelOpen && "pointer-events-none",
-        )}
+      <Overlay
+        isOpen={isTodoFormPanelOpen}
+        onClose={() => setIsTodoFormPanelOpen(false)}
       />
     </>
   );

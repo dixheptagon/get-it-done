@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useState } from "react";
 import clsx from "clsx";
 import { MobileTodoFormPanel } from "./mobileTodoFormPanel";
+import { Overlay } from "../ui/overlay";
 
 const NAVBAR_OPTIONS = [
   {
@@ -59,13 +60,9 @@ export function MobileNav() {
         <IoAdd className="text-primary-0 h-6 w-6" />
       </button>
 
-      <button
-        onClick={() => setIsTodoFormPanelOpen(false)}
-        className={clsx(
-          "bg-primary-800/45 fixed top-0 left-0 z-10 min-h-full w-full opacity-0 backdrop-blur-[1.5px] transition-opacity duration-300",
-          isTodoFormPanelOpen && "opacity-100",
-          !isTodoFormPanelOpen && "pointer-events-none",
-        )}
+      <Overlay
+        isOpen={isTodoFormPanelOpen}
+        onClose={() => setIsTodoFormPanelOpen(false)}
       />
 
       <MobileTodoFormPanel
