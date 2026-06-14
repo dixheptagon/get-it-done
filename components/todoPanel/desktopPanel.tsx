@@ -13,6 +13,7 @@ import { CurrentTimeTracker } from "./currentTimeTracker";
 import { useShallow } from "zustand/react/shallow";
 import clsx from "clsx";
 import { FaRegClock } from "react-icons/fa";
+import { openTodoDetail } from "@/store/useTodoUIStore";
 
 export function DesktopPanel() {
   const todos = useTodoStore(
@@ -80,10 +81,12 @@ export function DesktopPanel() {
                   const isTimePast = todo.endTime < currentTime;
 
                   return (
-                    <div
+                    <button
                       key={todo.id}
+                      onClick={() => openTodoDetail(todo)}
                       className={clsx(
                         "bg-primary-0 text-primary-800 font-inter flex cursor-pointer flex-col space-y-2 rounded-xs p-2 shadow-md",
+                        "text-left",
                         (isTimePast || isPast) && "opacity-45",
                       )}
                     >
@@ -110,7 +113,7 @@ export function DesktopPanel() {
                           </p>
                         )}
                       </div>
-                    </div>
+                    </button>
                   );
                 })}
               </div>

@@ -1,5 +1,6 @@
 import { DesktopPanel } from "./desktopPanel";
 import { MobilePanel } from "./mobilePanel";
+import { DesktopTodoDetail } from "./todoDetail/desktopTodoDetail";
 import { MobileTodoDetail } from "./todoDetail/mobileTodoDetail";
 
 export function TodoPanel() {
@@ -12,6 +13,7 @@ export function TodoPanel() {
 
       <div className="hidden md:block">
         <DesktopPanel />
+        <DesktopTodoDetail />
       </div>
     </main>
   );
