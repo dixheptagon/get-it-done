@@ -9,6 +9,7 @@ import { FaRegClock } from "react-icons/fa";
 import { CurrentTimeTracker } from "./currentTimeTracker";
 import { useShallow } from "zustand/react/shallow";
 import { openTodoDetail } from "@/store/useTodoUIStore";
+import { IoMdDoneAll } from "react-icons/io";
 
 export function MobilePanel() {
   const todos = useTodoStore(
@@ -67,7 +68,12 @@ export function MobilePanel() {
                         (isTimePast || isPast) && "opacity-45",
                       )}
                     >
-                      <p className="pr-4 text-base font-semibold">
+                      <p
+                        className={clsx(
+                          "pr-4 text-base font-semibold",
+                          todo.isDone && "line-through",
+                        )}
+                      >
                         {todo.title}
                       </p>
 
@@ -84,11 +90,14 @@ export function MobilePanel() {
                             <p>{todo.endTime}</p>
                           </div>
                         </div>
-                        {todo.isImportant && (
-                          <p className="font-jetbrains-mono bg-primary-800 text-primary-0 w-fit p-1 text-xs uppercase">
-                            Urgent
-                          </p>
-                        )}
+                        <div className="flex items-center gap-2">
+                          {todo.isDone && <IoMdDoneAll className="h-6 w-6" />}
+                          {todo.isImportant && (
+                            <p className="font-jetbrains-mono bg-primary-800 text-primary-0 w-fit p-1 text-xs uppercase">
+                              Urgent
+                            </p>
+                          )}
+                        </div>
                       </div>
                     </button>
                   );

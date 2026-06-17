@@ -5,6 +5,7 @@ import { persist, createJSONStorage } from "zustand/middleware";
 
 type TodoValues = TodoFormValues & {
   id: string;
+  isDone: boolean;
 };
 
 type TodoStore = {
@@ -46,5 +47,23 @@ const addTodo = (todo: TodoValues) => {
   }));
 };
 
-export { useTodoStore, setSelectedDate, addTodo };
+const toggleTodoDone = (id: string | undefined) => {
+  if (!id) return;
+
+  useTodoStore.setState((state) => ({
+    todos: state.todos.map((todo) =>
+      todo.id === id ? { ...todo, isDone: !todo.isDone } : todo,
+    ),
+  }));
+};
+
+const deleteTodo = (id: string | undefined) => {
+  if (!id) return;
+
+  useTodoStore.setState((state) => ({
+    todos: state.todos.filter((todo) => todo.id !== id),
+  }));
+};
+
+export { useTodoStore, setSelectedDate, addTodo, toggleTodoDone, deleteTodo };
 export type { TodoStore, TodoValues };

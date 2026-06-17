@@ -4,22 +4,22 @@ import { TodoValues } from "./useTodoStore";
 type TodoUIStore = {
   isTodoFormPanelOpen: boolean;
   isTodoDetailPanelOpen: boolean;
-  selectedTodo: TodoValues | null;
+  selectedTodoId: string | null;
 };
 
 const useTodoUIStore = create<TodoUIStore>((set) => ({
   isTodoFormPanelOpen: false,
   isTodoDetailPanelOpen: false,
-  selectedTodo: null,
+  selectedTodoId: null,
 }));
 
 const setIsTodoFormPanelOpen = (isTodoFormPanelOpen: boolean) => {
   useTodoUIStore.setState({ isTodoFormPanelOpen });
 };
 
-const openTodoDetail = (todo: TodoValues) => {
+const openTodoDetail = (todoId: TodoValues) => {
   useTodoUIStore.setState({
-    selectedTodo: todo,
+    selectedTodoId: todoId.id,
     isTodoDetailPanelOpen: true,
   });
 };
@@ -31,7 +31,7 @@ const closeTodoDetail = (timeOutDuration = 300) => {
 
   setTimeout(() => {
     useTodoUIStore.setState({
-      selectedTodo: null,
+      selectedTodoId: null,
     });
   }, timeOutDuration);
 };

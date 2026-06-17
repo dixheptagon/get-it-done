@@ -79,7 +79,6 @@ function WeeklyCalendarDesktop() {
         mode="single"
         selected={new Date(selectedDate)}
         onSelect={(date) => {
-          console.log("Date:", date);
           if (date) setSelectedDate(formatDateToString(date));
         }}
         captionLayout="dropdown"

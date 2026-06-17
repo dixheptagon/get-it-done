@@ -9,6 +9,9 @@ import clsx from "clsx";
 import { WeeklyCalendarDesktop } from "./weeklyCalendar";
 import { setIsTodoFormPanelOpen, useTodoUIStore } from "@/store/useTodoUIStore";
 import { Overlay } from "../ui/overlay";
+import { useTodoStore } from "@/store/useTodoStore";
+import { useShallow } from "zustand/react/shallow";
+import { getTaskProgress } from "@/lib/taskFormatter";
 
 const SIDEBAR_OPTIONS = [
   { name: "Today", icon: MdOutlineToday, path: "/" },
@@ -20,6 +23,16 @@ export function DesktopInfobar() {
   const isTodoFormPanelOpen = useTodoUIStore(
     (state) => state.isTodoFormPanelOpen,
   );
+
+  const todos = useTodoStore(
+    useShallow((state) =>
+      state.todos.filter((todo) => todo.date === state.selectedDate),
+    ),
+  );
+
+  const totalDoneTodos = todos.filter((todo) => todo.isDone).length;
+
+  const progress = getTaskProgress(todos.length, totalDoneTodos);
 
   return (
     <>
@@ -44,9 +57,9 @@ export function DesktopInfobar() {
         <div className="font-jetbrains-mono mt-8 space-y-3 text-sm font-semibold tracking-wide uppercase">
           <div className="flex items-center justify-between">
             <h2 className="text-primary-400">Today&apos;s Progress</h2>
-            <span>65%</span>
+            <span>{progress.percentage}%</span>
           </div>
-          <ProgressBar progress={65} />
+          <ProgressBar progress={progress.percentage} />
         </div>
 
         <div className="mt-8 space-y-2">

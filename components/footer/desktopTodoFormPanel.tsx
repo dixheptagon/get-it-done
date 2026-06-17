@@ -53,10 +53,10 @@ function DesktopTodoFormPanel() {
     (data: TodoFormValues) => {
       const todo = {
         id: crypto.randomUUID(),
+        isDone: false,
         ...data,
       };
 
-      console.log(todo);
       addTodo(todo);
 
       reset();
@@ -69,7 +69,7 @@ function DesktopTodoFormPanel() {
     <form onSubmit={handleSubmit(onSubmit)}>
       <div
         className={clsx(
-          "bg-primary-0 fixed right-0 bottom-0 z-100 min-h-screen min-w-[56vh]",
+          "bg-primary-0 fixed right-0 bottom-0 z-100 min-h-screen min-w-[60vh]",
           "px-8 py-4 transition-all duration-300",
           "flex flex-col justify-between",
           isTodoFormPanelOpen
@@ -161,7 +161,7 @@ function DesktopTodoFormPanel() {
 
             <div>
               {errors.date && (
-                <span className="text-sm text-red-500">
+                <span className="text-xs text-red-500">
                   *{errors.date.message}
                 </span>
               )}
@@ -169,13 +169,13 @@ function DesktopTodoFormPanel() {
 
             <div>
               {errors.startTime && (
-                <span className="text-sm text-red-500">
+                <span className="text-xs text-red-500">
                   *{errors.startTime.message}
                 </span>
               )}
 
               {errors.endTime && (
-                <span className="text-sm text-red-500">
+                <span className="text-xs text-red-500">
                   *{errors.endTime.message}
                 </span>
               )}
