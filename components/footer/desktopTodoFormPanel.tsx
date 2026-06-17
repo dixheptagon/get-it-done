@@ -1,20 +1,25 @@
 "use client";
 
 import { getPresentTime, getTodayDate } from "@/lib/date";
-import { addTodo } from "@/store/useTodoStore";
+import { addTodo, updateTodo, useTodoStore } from "@/store/useTodoStore";
 import { setIsTodoFormPanelOpen, useTodoUIStore } from "@/store/useTodoUIStore";
 import { TodoFormValues, todoSchema } from "@/types/todoSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import clsx from "clsx";
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { FaCheck } from "react-icons/fa";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { IoIosClose } from "react-icons/io";
 import { IoLink } from "react-icons/io5";
-import { MdAddTask } from "react-icons/md";
+import { MdAddTask, MdOutlineEdit } from "react-icons/md";
 
 function DesktopTodoFormPanel() {
+  const selectedTodoId = useTodoUIStore((state) => state.selectedTodoId);
+  const selectedTodo = useTodoStore((state) =>
+    state.todos.find((todo) => todo.id === selectedTodoId),
+  );
+
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
 
   const handleTextareaInput = (e: React.FormEvent<HTMLTextAreaElement>) => {
@@ -49,21 +54,46 @@ function DesktopTodoFormPanel() {
     },
   });
 
-  const onSubmit = useCallback(
-    (data: TodoFormValues) => {
-      const todo = {
-        id: crypto.randomUUID(),
-        isDone: false,
-        ...data,
-      };
+  useEffect(() => {
+    if (!selectedTodo) {
+      reset({
+        title: "",
+        description: "",
+        date: getTodayDate(),
+        startTime: getPresentTime(),
+        endTime: getPresentTime(true),
+        isImportant: false,
+      });
 
+      return;
+    }
+
+    reset({
+      title: selectedTodo.title,
+      description: selectedTodo.description,
+      date: selectedTodo.date,
+      startTime: selectedTodo.startTime,
+      endTime: selectedTodo.endTime,
+      isImportant: selectedTodo.isImportant,
+    });
+  }, [selectedTodo, reset]);
+
+  const onSubmit = (data: TodoFormValues) => {
+    const todo = {
+      id: selectedTodo?.id || crypto.randomUUID(),
+      isDone: selectedTodo?.isDone ?? false,
+      ...data,
+    };
+
+    if (selectedTodo) {
+      updateTodo(todo);
+    } else {
       addTodo(todo);
+    }
 
-      reset();
-      setIsTodoFormPanelOpen(false);
-    },
-    [reset],
-  );
+    reset();
+    setIsTodoFormPanelOpen(false);
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -264,8 +294,17 @@ function DesktopTodoFormPanel() {
             type="submit"
             className="bg-primary-800 ring-primary-800 text-primary-0 font-jetbrains-mono hover:bg-primary-600 mt-4 flex w-full items-center justify-center gap-2 rounded-xs p-2.5 text-center text-sm uppercase ring-2 transition-colors"
           >
-            <MdAddTask className="h-5 w-5" />
-            Create Task
+            {selectedTodo?.id ? (
+              <>
+                <MdOutlineEdit className="h-5 w-5" />
+                <span>Edit Task</span>
+              </>
+            ) : (
+              <>
+                <MdAddTask className="h-5 w-5" />
+                <span>Create Task</span>
+              </>
+            )}
           </button>
         </div>
       </div>

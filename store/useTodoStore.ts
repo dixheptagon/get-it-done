@@ -11,7 +11,6 @@ type TodoValues = TodoFormValues & {
 type TodoStore = {
   selectedDate: string;
   todos: TodoValues[];
-  getSelectedDateTodos: () => TodoValues[];
 };
 
 const useTodoStore = create<TodoStore>()(
@@ -20,15 +19,6 @@ const useTodoStore = create<TodoStore>()(
       selectedDate: formatDateToString(new Date()),
 
       todos: [],
-
-      getSelectedDateTodos: () => {
-        const targetDate = get().selectedDate;
-        return get().todos.filter(
-          (todo) =>
-            todo.startTime.slice(0, 10) === targetDate &&
-            todo.endTime.slice(0, 10) === targetDate,
-        );
-      },
     }),
     {
       name: "todo-store",
@@ -65,5 +55,20 @@ const deleteTodo = (id: string | undefined) => {
   }));
 };
 
-export { useTodoStore, setSelectedDate, addTodo, toggleTodoDone, deleteTodo };
+const updateTodo = (newTodo: TodoValues) => {
+  if (!newTodo.id) return;
+
+  useTodoStore.setState((state) => ({
+    todos: state.todos.map((todo) => (todo.id === newTodo.id ? newTodo : todo)),
+  }));
+};
+
+export {
+  useTodoStore,
+  setSelectedDate,
+  addTodo,
+  toggleTodoDone,
+  deleteTodo,
+  updateTodo,
+};
 export type { TodoStore, TodoValues };

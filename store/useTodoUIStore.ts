@@ -14,12 +14,12 @@ const useTodoUIStore = create<TodoUIStore>((set) => ({
 }));
 
 const setIsTodoFormPanelOpen = (isTodoFormPanelOpen: boolean) => {
-  useTodoUIStore.setState({ isTodoFormPanelOpen });
+  useTodoUIStore.setState({ isTodoFormPanelOpen, selectedTodoId: null });
 };
 
-const openTodoDetail = (todoId: TodoValues) => {
+const openTodoDetail = (todoId: string) => {
   useTodoUIStore.setState({
-    selectedTodoId: todoId.id,
+    selectedTodoId: todoId,
     isTodoDetailPanelOpen: true,
   });
 };
@@ -36,9 +36,18 @@ const closeTodoDetail = (timeOutDuration = 300) => {
   }, timeOutDuration);
 };
 
+const editTodo = (todoId: string) => {
+  useTodoUIStore.setState({
+    selectedTodoId: todoId,
+    isTodoDetailPanelOpen: false,
+    isTodoFormPanelOpen: true,
+  });
+};
+
 export {
   useTodoUIStore,
   setIsTodoFormPanelOpen,
   openTodoDetail,
   closeTodoDetail,
+  editTodo,
 };

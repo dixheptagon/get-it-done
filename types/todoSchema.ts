@@ -19,9 +19,11 @@ const todoSchema = z
     endTime: z.string().min(1, { message: "End Time is required" }),
 
     attachmentLink: z
-      .string()
-      .url({ message: "Please enter a valid URL" })
-      .nullish(),
+      .union([
+        z.string().url({ message: "Please enter a valid URL" }),
+        z.literal(""),
+      ])
+      .optional(),
 
     isImportant: z.boolean(),
   })

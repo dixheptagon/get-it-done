@@ -84,7 +84,7 @@ export function DesktopPanel() {
                   return (
                     <button
                       key={todo.id}
-                      onClick={() => openTodoDetail(todo)}
+                      onClick={() => openTodoDetail(todo.id)}
                       className={clsx(
                         "bg-primary-0 text-primary-800 font-inter flex cursor-pointer flex-col space-y-2 rounded-xs p-2 shadow-md",
                         "text-left",

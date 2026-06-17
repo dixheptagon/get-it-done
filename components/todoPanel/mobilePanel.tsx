@@ -62,7 +62,7 @@ export function MobilePanel() {
                   return (
                     <button
                       key={todo.id}
-                      onClick={() => openTodoDetail(todo)}
+                      onClick={() => openTodoDetail(todo.id)}
                       className={clsx(
                         "border-primary-500 text-primary-800 font-inter flex cursor-pointer flex-col space-y-2 rounded-xs border-2 p-2 text-left",
                         (isTimePast || isPast) && "opacity-45",
