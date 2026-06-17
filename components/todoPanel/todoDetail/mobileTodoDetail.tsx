@@ -15,7 +15,11 @@ import { Overlay } from "@/components/ui/overlay";
 import { formatShortDate } from "@/lib/dateFormatter";
 import { formatDisplayUrl } from "@/lib/linkFormatter";
 import { deleteTodo, toggleTodoDone, useTodoStore } from "@/store/useTodoStore";
-import { closeTodoDetail, useTodoUIStore } from "@/store/useTodoUIStore";
+import {
+  closeTodoDetail,
+  editTodo,
+  useTodoUIStore,
+} from "@/store/useTodoUIStore";
 import clsx from "clsx";
 import Link from "next/link";
 import { FaRegClock, FaUndo } from "react-icons/fa";
@@ -204,7 +208,12 @@ const MobileTodoDetail = () => {
               </DialogContent>
             </Dialog>
 
-            <button className="border-primary-800 bg-primary-800 text-primary-0 flex w-full items-center justify-center gap-3 rounded-xs border-2 py-3">
+            <button
+              onClick={() => {
+                editTodo(id!);
+              }}
+              className="border-primary-800 bg-primary-800 text-primary-0 flex w-full items-center justify-center gap-3 rounded-xs border-2 py-3"
+            >
               <MdOutlineModeEdit className="h-6 w-6" />
               <p className="font-jetbrains-mono text-base font-bold uppercase">
                 Edit Task

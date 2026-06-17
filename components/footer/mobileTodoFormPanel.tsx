@@ -8,17 +8,35 @@ import clsx from "clsx";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { IoIosClose } from "react-icons/io";
 import { IoLink } from "react-icons/io5";
-import { addTodo } from "@/store/useTodoStore";
-import { useCallback, useState } from "react";
+import { addTodo, updateTodo, useTodoStore } from "@/store/useTodoStore";
+import { useEffect, useRef, useState } from "react";
+import { setIsTodoFormPanelOpen, useTodoUIStore } from "@/store/useTodoUIStore";
+import { MdAddTask, MdOutlineEdit } from "react-icons/md";
 
-function MobileTodoFormPanel({
-  isTodoFormPanelOpen,
-  setIsTodoFormPanelOpen,
-}: {
-  isTodoFormPanelOpen: boolean;
-  setIsTodoFormPanelOpen: (isTodoFormPanelOpen: boolean) => void;
-}) {
+function MobileTodoFormPanel() {
   const [isImportant, setIsImportant] = useState(false);
+
+  const isTodoFormPanelOpen = useTodoUIStore(
+    (state) => state.isTodoFormPanelOpen,
+  );
+
+  const selectedTodoId = useTodoUIStore((state) => state.selectedTodoId);
+  const selectedTodo = useTodoStore((state) =>
+    state.todos.find((todo) => todo.id === selectedTodoId),
+  );
+
+  const descriptionRef = useRef<HTMLTextAreaElement>(null);
+
+  const handleTextareaInput = (e: React.FormEvent<HTMLTextAreaElement>) => {
+    const textarea = e.currentTarget;
+
+    textarea.style.height = "auto";
+
+    if (textarea.scrollHeight > 100) {
+      textarea.style.height = "auto";
+    }
+    textarea.style.height = `${textarea.scrollHeight}px`;
+  };
 
   const {
     register,
@@ -38,20 +56,46 @@ function MobileTodoFormPanel({
     },
   });
 
-  const onSubmit = useCallback(
-    (data: TodoFormValues) => {
-      const todo = {
-        id: crypto.randomUUID(),
-        ...data,
-      };
+  useEffect(() => {
+    if (!selectedTodo) {
+      reset({
+        title: "",
+        description: "",
+        date: getTodayDate(),
+        startTime: getPresentTime(),
+        endTime: getPresentTime(true),
+        isImportant: false,
+      });
 
+      return;
+    }
+
+    reset({
+      title: selectedTodo.title,
+      description: selectedTodo.description,
+      date: selectedTodo.date,
+      startTime: selectedTodo.startTime,
+      endTime: selectedTodo.endTime,
+      isImportant: selectedTodo.isImportant,
+    });
+  }, [selectedTodo, reset]);
+
+  const onSubmit = (data: TodoFormValues) => {
+    const todo = {
+      id: selectedTodo?.id || crypto.randomUUID(),
+      isDone: selectedTodo?.isDone ?? false,
+      ...data,
+    };
+
+    if (selectedTodo) {
+      updateTodo(todo);
+    } else {
       addTodo(todo);
+    }
 
-      reset();
-      setIsTodoFormPanelOpen(false);
-    },
-    [reset],
-  );
+    reset();
+    setIsTodoFormPanelOpen(false);
+  };
 
   return (
     <div
@@ -120,6 +164,11 @@ function MobileTodoFormPanel({
               errors.description && "ring ring-red-500!",
             )}
             placeholder="Add context or notes..."
+            ref={(e) => {
+              register("description").ref(e);
+              descriptionRef.current = e;
+            }}
+            onInput={handleTextareaInput}
           ></textarea>
         </div>
 
@@ -246,7 +295,17 @@ function MobileTodoFormPanel({
           type="submit"
           className="bg-primary-800 text-primary-0 font-jetbrains-mono mt-8 w-full rounded-xs p-3 text-center text-lg uppercase"
         >
-          Create Task
+          {selectedTodo?.id ? (
+            <>
+              <MdOutlineEdit className="h-5 w-5" />
+              <span>Edit Task</span>
+            </>
+          ) : (
+            <>
+              <MdAddTask className="h-5 w-5" />
+              <span>Create Task</span>
+            </>
+          )}
         </button>
       </form>
     </div>

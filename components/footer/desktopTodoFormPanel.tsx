@@ -6,7 +6,7 @@ import { setIsTodoFormPanelOpen, useTodoUIStore } from "@/store/useTodoUIStore";
 import { TodoFormValues, todoSchema } from "@/types/todoSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import clsx from "clsx";
-import { useCallback, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { FaCheck } from "react-icons/fa";
 import { FaArrowRightLong } from "react-icons/fa6";

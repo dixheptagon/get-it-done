@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { TodoValues } from "./useTodoStore";
 
 type TodoUIStore = {
   isTodoFormPanelOpen: boolean;

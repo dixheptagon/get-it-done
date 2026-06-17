@@ -9,6 +9,7 @@ import { useState } from "react";
 import clsx from "clsx";
 import { MobileTodoFormPanel } from "./mobileTodoFormPanel";
 import { Overlay } from "../ui/overlay";
+import { setIsTodoFormPanelOpen, useTodoUIStore } from "@/store/useTodoUIStore";
 
 const NAVBAR_OPTIONS = [
   {
@@ -28,8 +29,9 @@ const NAVBAR_OPTIONS = [
 export function MobileNav() {
   const pathname = usePathname();
 
-  const [isTodoFormPanelOpen, setIsTodoFormPanelOpen] =
-    useState<boolean>(false);
+  const isTodoFormPanelOpen = useTodoUIStore(
+    (state) => state.isTodoFormPanelOpen,
+  );
 
   return (
     <main className="">
@@ -65,10 +67,7 @@ export function MobileNav() {
         onClose={() => setIsTodoFormPanelOpen(false)}
       />
 
-      <MobileTodoFormPanel
-        isTodoFormPanelOpen={isTodoFormPanelOpen}
-        setIsTodoFormPanelOpen={setIsTodoFormPanelOpen}
-      />
+      <MobileTodoFormPanel />
     </main>
   );
 }
