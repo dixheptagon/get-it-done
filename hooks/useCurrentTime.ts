@@ -9,10 +9,7 @@ export function useCurrentTime(intervalMs = 10000) {
     return () => clearInterval(interval);
   }, [intervalMs]);
 
-  const activeHour =
-    current.getHours() === 23
-      ? "23:59"
-      : current.getHours().toString().padStart(2, "0") + ":00";
+  const activeHour = current.getHours().toString().padStart(2, "0") + ":00";
   const progress = current.getMinutes() / 60;
 
   return { current, activeHour, progress };
