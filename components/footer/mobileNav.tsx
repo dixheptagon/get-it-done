@@ -18,12 +18,6 @@ const NAVBAR_OPTIONS = [
     iconActive: FaCalendar,
     path: "/",
   },
-  {
-    name: "Settings",
-    icon: IoSettingsOutline,
-    iconActive: IoSettingsSharp,
-    path: "/settings",
-  },
 ];
 
 export function MobileNav() {

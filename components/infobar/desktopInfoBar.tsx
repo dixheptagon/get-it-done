@@ -2,7 +2,7 @@
 
 import { IoMdAdd } from "react-icons/io";
 import { ProgressBar } from "./progressBar";
-import { MdOutlineSettings, MdOutlineToday } from "react-icons/md";
+import { MdOutlineToday } from "react-icons/md";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import clsx from "clsx";
@@ -13,10 +13,7 @@ import { useTodoStore } from "@/store/useTodoStore";
 import { useShallow } from "zustand/react/shallow";
 import { getTaskProgress } from "@/lib/taskFormatter";
 
-const SIDEBAR_OPTIONS = [
-  { name: "Today", icon: MdOutlineToday, path: "/" },
-  { name: "Settings", icon: MdOutlineSettings, path: "/settings" },
-];
+const SIDEBAR_OPTIONS = [{ name: "Today", icon: MdOutlineToday, path: "/" }];
 
 export function DesktopInfobar() {
   const pathname = usePathname();
