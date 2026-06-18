@@ -10,6 +10,7 @@ import { CurrentTimeTracker } from "./currentTimeTracker";
 import { useShallow } from "zustand/react/shallow";
 import { openTodoDetail } from "@/store/useTodoUIStore";
 import { IoMdDoneAll } from "react-icons/io";
+import { useEffect } from "react";
 
 export function MobilePanel() {
   const todos = useTodoStore(
@@ -27,6 +28,14 @@ export function MobilePanel() {
   const isToday = selectedDate === today;
   const isPast = selectedDate < today;
   const currentTime = formatTime(date);
+
+  useEffect(() => {
+    if (!isToday) return;
+
+    const currentSection = hourPanelRef.current[activeHour];
+
+    currentSection?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, [isToday, activeHour]);
 
   return (
     <main className="mt-52 mb-12">

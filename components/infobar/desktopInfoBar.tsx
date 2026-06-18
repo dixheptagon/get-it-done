@@ -36,7 +36,7 @@ export function DesktopInfobar() {
 
   return (
     <>
-      <main className="bg-primary-0 fixed top-0 left-0 min-h-screen min-w-[48vh] px-12 py-8">
+      <main className="bg-primary-0 fixed top-0 left-0 flex min-h-screen min-w-[48vh] flex-col px-12 py-8">
         <div>
           <h1 className="text-2xl font-bold">Get in Done</h1>
           <span className="text-primary-400 font-semibold">
@@ -83,7 +83,7 @@ export function DesktopInfobar() {
           })}
         </div>
 
-        <div className="mt-8">
+        <div className="mt-auto">
           <WeeklyCalendarDesktop />
         </div>
       </main>

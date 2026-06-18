@@ -71,5 +71,15 @@ const getPresentTime = (isEndTime: boolean = false) => {
   return `${hours}:00`;
 };
 
-export { getWeeklyDates, getTodayDate, getPresentTime, getDisabledBeforeDates };
+function getStartOfDay(date: Date) {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+}
+
+export {
+  getWeeklyDates,
+  getTodayDate,
+  getPresentTime,
+  getDisabledBeforeDates,
+  getStartOfDay,
+};
 export type { DayItem };

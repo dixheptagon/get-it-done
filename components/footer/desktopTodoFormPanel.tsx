@@ -20,16 +20,13 @@ function DesktopTodoFormPanel() {
     state.todos.find((todo) => todo.id === selectedTodoId),
   );
 
-  const descriptionRef = useRef<HTMLTextAreaElement>(null);
+  const descriptionRef = useRef<HTMLTextAreaElement | null>(null);
 
-  const handleTextareaInput = (e: React.FormEvent<HTMLTextAreaElement>) => {
-    const textarea = e.currentTarget;
+  const adjustTextareaHeight = () => {
+    const textarea = descriptionRef.current;
+    if (!textarea) return;
 
     textarea.style.height = "auto";
-
-    if (textarea.scrollHeight > 300) {
-      textarea.style.height = "auto";
-    }
     textarea.style.height = `${textarea.scrollHeight}px`;
   };
 
@@ -64,18 +61,18 @@ function DesktopTodoFormPanel() {
         endTime: getPresentTime(true),
         isImportant: false,
       });
-
-      return;
+    } else {
+      reset({
+        title: selectedTodo.title,
+        description: selectedTodo.description,
+        date: selectedTodo.date,
+        startTime: selectedTodo.startTime,
+        endTime: selectedTodo.endTime,
+        isImportant: selectedTodo.isImportant,
+      });
     }
 
-    reset({
-      title: selectedTodo.title,
-      description: selectedTodo.description,
-      date: selectedTodo.date,
-      startTime: selectedTodo.startTime,
-      endTime: selectedTodo.endTime,
-      isImportant: selectedTodo.isImportant,
-    });
+    setTimeout(adjustTextareaHeight, 0);
   }, [selectedTodo, reset]);
 
   const onSubmit = (data: TodoFormValues) => {
@@ -101,7 +98,7 @@ function DesktopTodoFormPanel() {
         className={clsx(
           "bg-primary-0 fixed right-0 bottom-0 z-100 min-h-screen min-w-[60vh]",
           "px-8 py-4 transition-all duration-300",
-          "flex flex-col justify-between",
+          "flex flex-col",
           isTodoFormPanelOpen
             ? "translate-x-0 opacity-100"
             : "translate-x-full opacity-0",
@@ -232,7 +229,7 @@ function DesktopTodoFormPanel() {
                 register("description").ref(e);
                 descriptionRef.current = e;
               }}
-              onInput={handleTextareaInput}
+              onInput={adjustTextareaHeight}
               className={clsx(
                 "ring-primary-200 focus:ring-primary-500 text-primary-800 mt-1 w-full rounded-xs p-2 ring-1 transition-all outline-none",
                 "max-h-42 min-h-24 overflow-y-auto",
@@ -287,7 +284,7 @@ function DesktopTodoFormPanel() {
           </div>
         </div>
 
-        <div>
+        <div className="mt-auto">
           <div className="border-primary-200 -mx-8 border-b-2" />
 
           <button

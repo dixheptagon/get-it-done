@@ -1,4 +1,5 @@
 import { formatDateToString } from "@/lib/dateFormatter";
+import { removeExpiredTodos } from "@/lib/taskFormatter";
 import { TodoFormValues } from "@/types/todoSchema";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
@@ -23,6 +24,13 @@ const useTodoStore = create<TodoStore>()(
     {
       name: "todo-store",
       storage: createJSONStorage(() => localStorage),
+      partialize: (state) => ({ todos: state.todos }),
+
+      onRehydrateStorage: () => (state) => {
+        if (!state) return;
+
+        state.todos = removeExpiredTodos(state.todos);
+      },
     },
   ),
 );

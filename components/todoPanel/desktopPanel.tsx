@@ -15,6 +15,7 @@ import clsx from "clsx";
 import { FaRegClock } from "react-icons/fa";
 import { openTodoDetail } from "@/store/useTodoUIStore";
 import { IoMdDoneAll } from "react-icons/io";
+import { useEffect, useRef } from "react";
 
 export function DesktopPanel() {
   const todos = useTodoStore(
@@ -32,6 +33,14 @@ export function DesktopPanel() {
   const isToday = selectedDate === today;
   const isPast = selectedDate < today;
   const currentTime = formatTime(date);
+
+  useEffect(() => {
+    if (!isToday) return;
+
+    const currentSection = hourPanelRef.current[activeHour];
+
+    currentSection?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, [isToday, activeHour]);
 
   return (
     <div className="px-20 py-6">
